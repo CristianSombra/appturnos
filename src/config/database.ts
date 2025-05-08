@@ -1,5 +1,6 @@
 import { Sequelize } from "sequelize";
 import { ENV } from "./env";
+import { initModels } from "../models";
 
 export const sequelize = new Sequelize(
     ENV.DB.NAME,
@@ -19,6 +20,7 @@ export const connectDataBase = async () => {
     try {
         console.log(ENV.DB)
         await sequelize.authenticate();
+        await initModels();
         console.log('✅ Conexión a la base de datos establecida')
     } catch (error) {
         console.error('❌ Error al conectar con la base de datos:', error)
