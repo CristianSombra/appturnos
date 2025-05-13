@@ -14,11 +14,11 @@ export const sequelize = new Sequelize(
     }
 );
 
-console.log(ENV.DB)
+// console.log(ENV.DB)
 
 export const connectDataBase = async () => {
     try {
-        console.log(ENV.DB)
+        // console.log(ENV.DB)
         await sequelize.authenticate();
         await initModels();
         console.log('✅ Conexión a la base de datos establecida')
