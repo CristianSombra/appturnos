@@ -1,4 +1,4 @@
-import { DataTypes, Model, Sequelize } from 'sequelize';
+import { DataTypes, Model, Sequelize, Optional } from 'sequelize';
 
 //Definición de atributos que tiene el usuario en BD
 export interface PacienteAttributes {
@@ -9,7 +9,7 @@ export interface PacienteAttributes {
 }
 
 //Todos los campos obligatorios
-export type PacienteCreationAttributes = PacienteAttributes;
+export type PacienteCreationAttributes = Optional<PacienteAttributes, 'id'>;
 
 export class Paciente extends Model<PacienteAttributes, PacienteCreationAttributes> implements PacienteAttributes {
   public id!: number;

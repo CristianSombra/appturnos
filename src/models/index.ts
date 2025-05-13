@@ -7,6 +7,7 @@ import { Agenda, initAgendaModel } from "./agenda.model";
 import { Turno, initTurnoModel } from "./turno.model";
 
 export const initModels = async () => {
+     // Inicializamos todos los modelos primero
     initUsuarioModel(sequelize);
     initPacienteModel(sequelize)
     initProfesionalModel(sequelize)
@@ -15,7 +16,7 @@ export const initModels = async () => {
     initTurnoModel(sequelize)
 
 
-    //Establecemos las relaciones
+    //Establecemos las relaciones después de inicializar modelos
     Paciente.belongsTo(Usuario, { foreignKey: 'usuario_id' });
     Usuario.hasOne(Paciente, { foreignKey: 'usuario_id' });
 
@@ -46,6 +47,7 @@ export const initModels = async () => {
 
 export {
     Usuario,
+    initUsuarioModel,
     Paciente,
     Profesional,
     Especialidad,

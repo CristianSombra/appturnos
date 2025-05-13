@@ -1,4 +1,4 @@
-import { DataTypes, Model, Sequelize } from 'sequelize';
+import { DataTypes, Model, Sequelize, Optional } from 'sequelize';
 
 export interface ProfesionalAttributes {
   id: number;
@@ -8,7 +8,7 @@ export interface ProfesionalAttributes {
   descripcion: string;
 }
 
-export type ProfesionalCreationAttributes = ProfesionalAttributes;
+export type ProfesionalCreationAttributes = Optional<ProfesionalAttributes, 'id'>;
 
 export class Profesional extends Model<ProfesionalAttributes, ProfesionalCreationAttributes> implements ProfesionalAttributes {
   public id!: number;
