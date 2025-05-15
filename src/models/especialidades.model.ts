@@ -7,7 +7,8 @@ export interface EspecialidadAttributes {
 
 export type EspecialidadCreationAttributes = Optional<EspecialidadAttributes, 'id'>;
 
-export class Especialidad extends Model<EspecialidadAttributes, EspecialidadCreationAttributes> implements EspecialidadAttributes {
+export class Especialidad extends Model<EspecialidadAttributes, EspecialidadCreationAttributes>
+  implements EspecialidadAttributes {
   public id!: number;
   public nombre!: string;
 }
