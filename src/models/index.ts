@@ -31,18 +31,6 @@ export const initModels = async () => {
     Turno.belongsTo(Profesional, { foreignKey: 'id_profesional' });
     Profesional.hasMany(Turno, { foreignKey: 'id_profesional' });
 
-    await sequelize.sync();
-
-    //Carga inicial de datos: Especialidades
-    await Especialidad.bulkCreate([
-        { nombre: 'Cardiología' },
-        { nombre: 'Pediatría' },
-        { nombre: 'Dermatología' },
-        { nombre: 'Neurología' },
-        { nombre: 'Traumatología' },
-        { nombre: 'Clínica Médica' },
-    ], { ignoreDuplicates: true })
-
 };
 
 export {

@@ -1,6 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import usuariosRoutes from './routes/usuario.routes';
+import especialidadRoutes from './routes/especialidad.routes';
 import { errorHandler } from './middlewares/errorHandler';
 
 dotenv.config();
@@ -10,6 +11,9 @@ app.use(express.json());
 
 //Rutas de usuario
 app.use('/usuarios', usuariosRoutes)
+
+//Rutas de especialidades
+app.use('/especialidades', especialidadRoutes)
 
 app.get("/", (_req, res) => {
     res.send("Api Turnos médicos funcionando ✅")
