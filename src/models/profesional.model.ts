@@ -1,4 +1,6 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize';
+import { Usuario } from './usuario.model';
+import { Especialidad } from './especialidades.model';
 
 export interface ProfesionalAttributes {
   id: number;
@@ -16,6 +18,9 @@ export class Profesional extends Model<ProfesionalAttributes, ProfesionalCreatio
   public matricula!: string;
   public especialidad_id!: number;
   public descripcion!: string;
+
+  public usuario?: Usuario;
+  public especialidad?: Especialidad;
 }
 
 export const initProfesionalModel = (sequelize: Sequelize) => {

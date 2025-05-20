@@ -1,4 +1,5 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize';
+import { Usuario } from './usuario.model';
 
 //Definición de atributos que tiene el usuario en BD
 export interface PacienteAttributes {
@@ -16,6 +17,8 @@ export class Paciente extends Model<PacienteAttributes, PacienteCreationAttribut
   public usuario_id!: number;
   public fecha_nacimiento!: Date;
   public dni!: string;
+
+  public usuario?: Usuario;
 }
 
 export const initPacienteModel = (sequelize: Sequelize) => {
