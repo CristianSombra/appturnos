@@ -5,6 +5,8 @@ interface UsuarioAttributes {
     id: number;
     nombre: string;
     apellido: string;
+    dni: string;
+    fecha_nacimiento: Date;
     email: string;
     password_hash: string;
     telefono: string;
@@ -19,6 +21,8 @@ export class Usuario extends Model <UsuarioAttributes, UsuarioCreationAttributes
     public id!: number;
     public nombre!: string;
     public apellido!: string;
+    public dni!: string;
+    public fecha_nacimiento!: Date;
     public email!: string;
     public password_hash!: string;
     public telefono!: string;
@@ -42,6 +46,15 @@ export const initUsuarioModel = (sequelize: Sequelize) => {
             apellido: {
                 type: DataTypes.STRING,
                 allowNull: false
+            },
+            dni: {
+                type: DataTypes.STRING,
+                allowNull: false,
+                unique: true,
+            },
+            fecha_nacimiento: {
+                type: DataTypes.DATE,
+                allowNull: false,
             },
             email: {
                 type: DataTypes.STRING,

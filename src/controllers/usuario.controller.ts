@@ -17,6 +17,10 @@ export const crearUsuario = async (req: Request, res: Response) => {
       dni
     } = req.body;
 
+    if (!dni || !fecha_nacimiento) {
+      return res.status(400).json({ mensaje: 'DNI y fecha de nacimiento son obligatorios' });
+    }
+
     const usuarioExistente = await Usuario.findOne({ where: { email } });
     if (usuarioExistente) {
       return res.status(400).json({ mensaje: 'El email ya está registrado' });
@@ -25,6 +29,8 @@ export const crearUsuario = async (req: Request, res: Response) => {
     const nuevoUsuario = await Usuario.create({
       nombre,
       apellido,
+      dni,
+      fecha_nacimiento,
       email,
       password_hash,
       telefono,
@@ -48,16 +54,7 @@ export const crearUsuario = async (req: Request, res: Response) => {
     }
 
     if (tipo_usuario === 'paciente') {
-      if (!fecha_nacimiento || !dni) {
-        return res.status(400).json({ mensaje: 'Faltan datos del paciente' });
-      }
-
-      const nuevoPaciente = await Paciente.create({
-        usuario_id: nuevoUsuario.id,
-        fecha_nacimiento,
-        dni
-      });
-
+      const nuevoPaciente = await Paciente.create({ usuario_id: nuevoUsuario.id });
       return res.status(201).json({ usuario: nuevoUsuario, paciente: nuevoPaciente });
     }
 
@@ -82,8 +79,8 @@ export const obtenerProfesionales = async (_req: Request, res: Response) => {
   try {
     const profesionales = await Profesional.findAll({
       include: [
-        { model: Usuario, as:'usuario' },
-        { model: Especialidad, as:'especialidad' }
+        { model: Usuario, as: 'usuario' },
+        { model: Especialidad, as: 'especialidad' }
       ]
     });
 
@@ -94,7 +91,9 @@ export const obtenerProfesionales = async (_req: Request, res: Response) => {
         apellido: p.usuario?.apellido,
         email: p.usuario?.email,
         telefono: p.usuario?.telefono,
-        tipo_usuario: p.usuario?.tipo_usuario
+        tipo_usuario: p.usuario?.tipo_usuario,
+        fecha_nacimiento: p.usuario?.fecha_nacimiento,
+        dni: p.usuario?.dni
       },
       profesional: {
         id: p.id,
@@ -117,7 +116,7 @@ export const obtenerProfesionales = async (_req: Request, res: Response) => {
 export const obtenerPacientes = async (_req: Request, res: Response) => {
   try {
     const pacientes = await Paciente.findAll({
-      include: [{ model: Usuario, as:'usuario' }]
+      include: [{ model: Usuario, as: 'usuario' }]
     });
 
     const resultados = pacientes.map((p) => ({
@@ -127,12 +126,12 @@ export const obtenerPacientes = async (_req: Request, res: Response) => {
         apellido: p.usuario?.apellido,
         email: p.usuario?.email,
         telefono: p.usuario?.telefono,
-        tipo_usuario: p.usuario?.tipo_usuario
+        tipo_usuario: p.usuario?.tipo_usuario,
+        fecha_nacimiento: p.usuario?.fecha_nacimiento,
+        dni: p.usuario?.dni
       },
       paciente: {
-        id: p.id,
-        fecha_nacimiento: p.fecha_nacimiento,
-        dni: p.dni
+        id: p.id
       }
     }));
 
