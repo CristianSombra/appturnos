@@ -17,13 +17,13 @@ export const initModels = async () => {
 
 
     //Establecemos las relaciones después de inicializar modelos
-    Paciente.belongsTo(Usuario, { foreignKey: 'usuario_id' });
-    Usuario.hasOne(Paciente, { foreignKey: 'usuario_id' });
+    Paciente.belongsTo(Usuario, { foreignKey: 'usuario_id', as:'usuario' });
+    Usuario.hasOne(Paciente, { foreignKey: 'usuario_id', as:'paciente' });
 
-    Profesional.belongsTo(Usuario, { foreignKey: 'usuario_id' });
-    Usuario.hasOne(Profesional, { foreignKey: 'usuario_id' });
+    Profesional.belongsTo(Usuario, { foreignKey: 'usuario_id', as: 'usuario' });
+    Usuario.hasOne(Profesional, { foreignKey: 'usuario_id', as:'profesional' });
     
-    Profesional.belongsTo(Especialidad, { foreignKey: 'especialidad_id' });
+    Profesional.belongsTo(Especialidad, { foreignKey: 'especialidad_id', as:'especialidad' });
 
     Agenda.belongsTo(Profesional, { foreignKey: 'id_profesional' });
     Profesional.hasMany(Agenda, { foreignKey: 'id_profesional' });

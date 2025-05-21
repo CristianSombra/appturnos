@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 import { Usuario, Profesional, Paciente, Especialidad } from '../models';
 
-// Crea usuario y su tipo (profesional o paciente)
 export const crearUsuario = async (req: Request, res: Response) => {
   try {
     const {
@@ -69,7 +68,6 @@ export const crearUsuario = async (req: Request, res: Response) => {
   }
 };
 
-// Trae todos los usuarios
 export const obtenerUsuarios = async (_req: Request, res: Response) => {
   try {
     const usuarios = await Usuario.findAll();
@@ -80,25 +78,33 @@ export const obtenerUsuarios = async (_req: Request, res: Response) => {
   }
 };
 
-// Trae profesionales con usuario y especialidad
 export const obtenerProfesionales = async (_req: Request, res: Response) => {
   try {
     const profesionales = await Profesional.findAll({
       include: [
-        { model: Usuario },
-        { model: Especialidad }
+        { model: Usuario, as:'usuario' },
+        { model: Especialidad, as:'especialidad' }
       ]
     });
 
     const resultados = profesionales.map((p) => ({
+      usuario: {
+        id: p.usuario?.id,
+        nombre: p.usuario?.nombre,
+        apellido: p.usuario?.apellido,
+        email: p.usuario?.email,
+        telefono: p.usuario?.telefono,
+        tipo_usuario: p.usuario?.tipo_usuario
+      },
       profesional: {
         id: p.id,
         matricula: p.matricula,
-        descripcion: p.descripcion,
-        especialidad_id: p.especialidad_id
+        descripcion: p.descripcion
       },
-      usuario: p.usuario,
-      especialidad: p.especialidad
+      especialidad: {
+        id: p.especialidad?.id,
+        nombre: p.especialidad?.nombre
+      }
     }));
 
     return res.status(200).json(resultados);
@@ -108,20 +114,26 @@ export const obtenerProfesionales = async (_req: Request, res: Response) => {
   }
 };
 
-// Trae pacientes con su usuario
 export const obtenerPacientes = async (_req: Request, res: Response) => {
   try {
     const pacientes = await Paciente.findAll({
-      include: [{ model: Usuario }]
+      include: [{ model: Usuario, as:'usuario' }]
     });
 
     const resultados = pacientes.map((p) => ({
+      usuario: {
+        id: p.usuario?.id,
+        nombre: p.usuario?.nombre,
+        apellido: p.usuario?.apellido,
+        email: p.usuario?.email,
+        telefono: p.usuario?.telefono,
+        tipo_usuario: p.usuario?.tipo_usuario
+      },
       paciente: {
         id: p.id,
         fecha_nacimiento: p.fecha_nacimiento,
         dni: p.dni
-      },
-      usuario: p.usuario
+      }
     }));
 
     return res.status(200).json(resultados);
