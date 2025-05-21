@@ -5,7 +5,6 @@ import { Usuario } from './usuario.model';
 export interface PacienteAttributes {
   id: number;
   usuario_id: number;
-
 }
 
 //Todos los campos obligatorios
