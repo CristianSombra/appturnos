@@ -3,7 +3,8 @@ import {
   crearUsuario,
   obtenerUsuarios,
   obtenerProfesionales,
-  obtenerPacientes
+  obtenerPacientes,
+  obtenerUsuarioPorDni
 } from '../controllers/usuario.controller';
 
 const router = Router();
@@ -12,5 +13,7 @@ router.post('/', (req: Request, res: Response) => void crearUsuario(req, res));
 router.get('/', (req: Request, res: Response) => void obtenerUsuarios(req, res));
 router.get('/profesionales', (req: Request, res: Response) => void obtenerProfesionales(req, res));
 router.get('/pacientes', (req: Request, res: Response) => void obtenerPacientes(req, res));
+router.get('/dni/:dni',(req: Request, res: Response) => void obtenerUsuarioPorDni(req, res));
+
 
 export default router;

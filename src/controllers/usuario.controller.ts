@@ -141,3 +141,23 @@ export const obtenerPacientes = async (_req: Request, res: Response) => {
     return res.status(500).json({ mensaje: 'Error interno del servidor' });
   }
 };
+
+export const obtenerUsuarioPorDni = async (req: Request, res: Response) => {
+  try {
+    const { dni } = req.params;
+
+    const usuario = await Usuario.findOne({where: {dni} });
+    if(!usuario) return res.status(404).json({ mensaje: 'Usuario no encontrado'});
+
+    const paciente = await Paciente.findOne({ where: { usuario_id: usuario.id } });
+    const profesional = await Profesional.findOne({
+      where: { usuario_id: usuario.id },
+      include: [{ model: Especialidad, as: 'especialidad' }]
+    });
+
+    return res.status(200).json({usuario, paciente, profesional, especialidad: profesional?.especialidad});
+  } catch (error) {
+    console.error('Error al buscar usuario por DNI: ', error);
+    return res.status(500).json({ mensaje: 'Error interno del servidor' })
+  }
+}
