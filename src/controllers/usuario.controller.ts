@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { Usuario, Profesional, Paciente, Especialidad } from '../models';
+import { Usuario, Profesional, Paciente, Especialidad, Agenda } from '../models';
 
 export const crearUsuario = async (req: Request, res: Response) => {
   try {
@@ -161,3 +161,79 @@ export const obtenerUsuarioPorDni = async (req: Request, res: Response) => {
     return res.status(500).json({ mensaje: 'Error interno del servidor' })
   }
 }
+
+export const actualizarUsuario = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const {
+      nombre,
+      apellido,
+      email,
+      password_hash,
+      telefono,
+      matricula,
+      especialidad_id,
+      descripcion,
+      fecha_nacimiento,
+      dni
+    } = req.body;
+
+    const usuario = await Usuario.findByPk(id);
+    if (!usuario) return res.status(404).json({ mensaje: 'Usuario no encontrado' });
+
+    // Actualiza campos básicos del usuario
+    await usuario.update({
+      nombre: nombre ?? usuario.nombre,
+      apellido: apellido ?? usuario.apellido,
+      email: email ?? usuario.email,
+      password_hash: password_hash ?? usuario.password_hash,
+      telefono: telefono ?? usuario.telefono,
+      fecha_nacimiento: fecha_nacimiento ?? usuario.fecha_nacimiento,
+      dni: dni ?? usuario.dni
+    });
+
+    // Si es profesional, actualizar también en tabla profesionales
+    if (usuario.tipo_usuario === 'profesional') {
+      const profesional = await Profesional.findOne({ where: { usuario_id: usuario.id } });
+      if (profesional) {
+        await profesional.update({
+          matricula: matricula ?? profesional.matricula,
+          especialidad_id: especialidad_id ?? profesional.especialidad_id,
+          descripcion: descripcion ?? profesional.descripcion
+        });
+      }
+    }
+
+    return res.status(200).json({ mensaje: 'Usuario actualizado correctamente' });
+  } catch (error) {
+    console.error('Error al actualizar usuario:', error);
+    return res.status(500).json({ mensaje: 'Error interno del servidor' });
+  }
+};
+
+export const eliminarUsuario = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const usuario = await Usuario.findByPk(id);
+
+    if (!usuario) return res.status(404).json({ mensaje: 'Usuario no encontrado' });
+
+    if (usuario.tipo_usuario === 'profesional') {
+      const profesional = await Profesional.findOne({ where: { usuario_id: usuario.id } });
+      if (profesional) {
+        await Agenda.destroy({ where: { id_profesional: profesional.id } });
+        await Profesional.destroy({ where: { usuario_id: usuario.id } });
+      }
+    }
+
+    if (usuario.tipo_usuario === 'paciente') {
+      await Paciente.destroy({ where: { usuario_id: usuario.id } });
+    }
+
+    await Usuario.destroy({ where: { id: usuario.id } });
+    return res.status(200).json({ mensaje: 'Usuario eliminado correctamente' });
+  } catch (error) {
+    console.error('Error al eliminar usuario:', error);
+    return res.status(500).json({ mensaje: 'Error interno del servidor' });
+  }
+};
