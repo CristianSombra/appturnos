@@ -38,3 +38,40 @@ export const obtenerAgendas = async (_req: Request, res: Response) => {
     return res.status(500).json({ mensaje: 'Error interno del servidor' });
   }
 };
+
+export const actualizarAgenda = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const { dia_semana, hora_inicio, hora_fin, duracion_turno_min } = req.body;
+
+    const agenda = await Agenda.findByPk(id);
+    if (!agenda) return res.status(404).json({ mensaje: 'Agenda no encontrada' });
+
+    await agenda.update({
+      dia_semana: dia_semana ?? agenda.dia_semana,
+      hora_inicio: hora_inicio ?? agenda.hora_inicio,
+      hora_fin: hora_fin ?? agenda.hora_fin,
+      duracion_turno_min: duracion_turno_min ?? agenda.duracion_turno_min
+    });
+
+    return res.status(200).json({ mensaje: 'Agenda actualizada correctamente' });
+  } catch (error) {
+    console.error('Error al actualizar agenda:', error);
+    return res.status(500).json({ mensaje: 'Error interno del servidor' });
+  }
+};
+
+export const eliminarAgenda = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const agenda = await Agenda.findByPk(id);
+
+    if (!agenda) return res.status(404).json({ mensaje: 'Agenda no encontrada' });
+
+    await agenda.destroy();
+    return res.status(200).json({ mensaje: 'Agenda eliminada correctamente' });
+  } catch (error) {
+    console.error('Error al eliminar agenda:', error);
+    return res.status(500).json({ mensaje: 'Error interno del servidor' });
+  }
+};
