@@ -28,8 +28,11 @@ export const initModels = async () => {
     Agenda.belongsTo(Profesional, { foreignKey: 'id_profesional', as: 'profesional' });
     Profesional.hasMany(Agenda, { foreignKey: 'id_profesional', as: 'profesional' });
 
-    Turno.belongsTo(Profesional, { foreignKey: 'id_profesional' });
-    Profesional.hasMany(Turno, { foreignKey: 'id_profesional' });
+    Turno.belongsTo(Profesional, { foreignKey: 'id_profesional', as: 'profesional' });
+    Profesional.hasMany(Turno, { foreignKey: 'id_profesional', as: 'turnos'});
+
+    Turno.belongsTo(Paciente, { foreignKey: 'id_paciente', as: 'paciente' });
+    Paciente.hasMany(Turno, { foreignKey: 'id_paciente', as: 'turnos' });
 
 };
 
