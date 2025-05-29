@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import usuariosRoutes from './routes/usuario.routes';
 import especialidadRoutes from './routes/especialidad.routes';
 import agendaRoutes from './routes/agenda.routes';
+import turnoRoutes from './routes/turno.routes';
 import { errorHandler } from './middlewares/errorHandler';
 
 dotenv.config();
@@ -18,6 +19,9 @@ app.use('/especialidades', especialidadRoutes)
 
 //Rutas de agenda
 app.use('/agendas', agendaRoutes);
+
+//Rutas de turnos
+app.use('/turnos', turnoRoutes);
 
 app.get("/", (_req, res) => {
     res.send("Api Turnos médicos funcionando ✅")
