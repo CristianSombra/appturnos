@@ -75,3 +75,22 @@ export const eliminarAgenda = async (req: Request, res: Response) => {
     return res.status(500).json({ mensaje: 'Error interno del servidor' });
   }
 };
+
+export const obtenerAgendasPorProfesional = async (req: Request, res: Response) => {
+  try {
+   const id = Number(req.query.profesional_id);
+
+    if (isNaN(id)) {
+      return res.status(400).json({ mensaje: 'profesional_id inválido' });
+    }
+    
+    const agendas = await Agenda.findAll({
+      where: { id_profesional: id }
+    });
+
+    return res.status(200).json(agendas);
+  } catch (error) {
+    console.error('Error al obtener agendas por profesional:', error);
+    return res.status(500).json({ mensaje: 'Error interno del servidor' });
+  }
+};
